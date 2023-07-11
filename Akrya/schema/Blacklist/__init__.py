@@ -1,5 +1,5 @@
 from .. import statusBase, Base, meta
-from ..User import userBase
+from ..objects import userBase
 from typing import List, Dict
 
 class getList(statusBase):

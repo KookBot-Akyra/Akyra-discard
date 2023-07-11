@@ -1,37 +1,6 @@
 from .. import Base, statusBase, meta
-from ..User import userBase
+from ..objects import *
 from typing import Optional, Union, Dict, List
-
-class permissionUsers(Base):
-    user: userBase
-    allow: int
-    deny: int
-
-class permissionOverwrites(Base):
-    role_id: int
-    allow: int
-    deny: int
-
-class permissionUser(Base):
-    user_id: str
-    allow: int
-    deny: int
-
-class channelBase(Base):
-    id: str
-    guild_id: str
-    user_id: str
-    parent_id: str
-    name: str
-    topic: str
-    type: int
-    level: int
-    slow_mode: int
-    has_password: bool
-    is_category: bool
-    permission_sync: int
-    permission_overwrites: List[Union[permissionOverwrites, None]]
-    permission_users: List[Union[permissionUsers, None]]
 
 class list(statusBase):
     class Data(Base):

@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 from .. import Base
-from ..User import userBase
+from ..objects import userBase
 
 class EventHandler(Base):
     class Main(Base):

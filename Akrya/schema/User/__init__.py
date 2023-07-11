@@ -1,5 +1,5 @@
 from .. import Base
-from typing import Optional, List
+from typing import Optional
 
 class meHandler(Base):
     class me(Base):
@@ -56,25 +56,3 @@ class offlineHandler(Base):
     code: int
     message: str
     data: dict
-
-class userBase(Base):
-    class liveInfo(Base):
-        in_live: bool
-        audience_count: int
-        live_thumb: str
-        live_start_time: int
-
-    id: str
-    username: str
-    nickname: str
-    identify_num: str
-    online: bool
-    bot: bool
-    status: int
-    avatar: str
-    vip_avatar: str
-    mobile_verified: Optional[bool]
-    roles: List[int]
-    joined_at: Optional[int]
-    active_time: Optional[int]
-    live_info: Optional[liveInfo]
