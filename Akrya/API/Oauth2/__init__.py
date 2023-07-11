@@ -1,5 +1,5 @@
 from .. import BotClient, baseAPIurl
-from ...schema.Oauth2 import *
+from ...schema.Oauth2 import getOauth
 
 
 class oauth2:
@@ -12,8 +12,9 @@ class oauth2:
     :Params : redirect_uri 回调地址
     :Return: Oauth2.oauth2
     """
+
     @staticmethod
-    async def list(grant_type:str,client_id:str,client_secret:str,code:str,redirect_uri:str) -> getOauth:
+    async def list(grant_type: str, client_id: str, client_secret: str, code: str, redirect_uri: str) -> getOauth:
         data = {
             "grant_type": grant_type,
             "client_id": client_id,
@@ -22,4 +23,4 @@ class oauth2:
             "redirect_uri": redirect_uri
         }
         result = await BotClient.post(url=baseAPIurl + "/oauth2/token", data=data)
-        return oauth2(**result.json())
+        return getOauth(**result.json())

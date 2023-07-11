@@ -2,6 +2,7 @@ from .. import BotClient, baseAPIurl
 from ...schema.Invite import *
 from typing import Optional
 
+
 class getInviteList:
     """
     获取邀请列表
@@ -12,17 +13,20 @@ class getInviteList:
     :Params: page_size 每页数据数量
     :return: Invite.getInvitelist
     """
+
     @staticmethod
-    async def list(guild_id:Optional[str] = None,channel_id:Optional[str] = None,page:Optional[int] = None,page_size:Optional[int] = None) -> getInvitelist:
-        Data = {
+    async def list(guild_id: Optional[str] = None, channel_id: Optional[str] = None, page: Optional[int] = None,
+                   page_size: Optional[int] = None) -> getInvitelist:
+        data = {
             "guild_id": guild_id,
             "channel_id": channel_id,
             "page": page,
             "page_size": page_size
         }
-        result = await BotClient.get(url=baseAPIurl + "/invite/list", params=Data)
+        result = await BotClient.get(url=baseAPIurl + "/invite/list", params=data)
         return getInvitelist(**result.json())
-    
+
+
 class createInvite:
     """
     创建邀请列表
@@ -33,16 +37,18 @@ class createInvite:
     :Params: setting_times 设置的次数
     :return: Invite.createInvite
     """
-    async def list(guild_id:Optional[str] = None,channel_id:Optional[str] = None,duration:Optional[int] = None,setting_times:Optional[int] = None) -> createInvite:
-        Data = {
-            "guild_id": guild_id,
+
+    async def list(self: Optional[str] = None, channel_id: Optional[str] = None, duration: Optional[int] = None,
+                   setting_times: Optional[int] = None) -> createInvite:
+        data = {
+            "guild_id": self,
             "channel_id": channel_id,
             "duration": duration,
             "setting_times": setting_times
         }
-        result = await BotClient.post(url=baseAPIurl + "/invite/create", data=Data)
+        result = await BotClient.post(url=baseAPIurl + "/invite/create", data=data)
         return createInvite(**result.json())
-    
+
 
 class deleteInvite:
     """
@@ -52,11 +58,12 @@ class deleteInvite:
     :Parmas: guild_id 服务器频道ID
     :return: Invite.deleteInvite
     """
-    async def list(url_code:str,channel_id:Optional[str] = None,guild_id:Optional[str] = None) -> deleteInvite:
-        Data = {
-            "url_code": url_code,
+
+    async def list(self: str, channel_id: Optional[str] = None, guild_id: Optional[str] = None) -> deleteInvite:
+        data = {
+            "url_code": self,
             "channel_id": channel_id,
             "guild_id": guild_id
         }
-        result = await BotClient.post(url=baseAPIurl + "/invite/delete", data=Data)
+        result = await BotClient.post(url=baseAPIurl + "/invite/delete", data=data)
         return deleteInvite(**result.json())

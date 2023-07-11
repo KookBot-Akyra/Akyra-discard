@@ -1,6 +1,8 @@
-from .. import BotClient, baseAPIurl
-from ...schema.Intimacy import *
 from typing import Optional
+
+from .. import BotClient, baseAPIurl
+from ...schema.Intimacy import intimacyHandler
+
 
 class getIntimacyList:
     """
@@ -8,14 +10,16 @@ class getIntimacyList:
     :Params: user_id: 用户ID
     :return: Intimacy.intimacy
     """
+
     @staticmethod
-    async def list(user_id:str) -> intimacyHandler:
+    async def list(user_id: str) -> intimacyHandler:
         data = {
             "user_id": user_id
         }
         result = await BotClient.get(url=baseAPIurl + "/intimacy/index", params=data)
         return intimacyHandler(**result.json())
-    
+
+
 class updateIntimacyList:
     """
     更新用户亲密度
@@ -25,8 +29,10 @@ class updateIntimacyList:
     :Params: img_id
     :return: Intimacy.updateIntimacyHandler
     """
+
     @staticmethod
-    async def list(user_id:str,score:Optional[int] = None,social_info:Optional[str] = None,img_id:Optional[str] = None) -> updateIntimacyHandler:
+    async def list(user_id: str, score: Optional[int] = None, social_info: Optional[str] = None,
+                   img_id: Optional[str] = None) -> intimacyHandler:
         data = {
             "user_id": user_id,
             "score": score,
@@ -35,4 +41,3 @@ class updateIntimacyList:
         }
         result = await BotClient.post(url=baseAPIurl + "/intimacy/update", data=data)
         return intimacyHandler(**result.json())
-    
