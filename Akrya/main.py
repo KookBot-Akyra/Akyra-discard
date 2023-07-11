@@ -7,7 +7,7 @@ __name__ = 'Akrya'
 
 async def getWssUrl() -> str:
     """
-    用于获取连接Kook的Wss地址
+    用于获取连接Kook的Websocket地址
     """
 
     result = await gateway.index(ws_compress)
