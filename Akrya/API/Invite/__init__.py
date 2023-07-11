@@ -3,20 +3,27 @@ from ...schema.Invite import *
 from typing import Optional
 
 
-class getInviteList:
+class invite:
     """
-    获取邀请列表
-    :Params: guild_id: 服务器ID
-    :Params: channel_id 频道ID
-    // guild ID && Channel ID 二选一
-    :Params: page 页码
-    :Params: page_size 每页数据数量
-    :return: Invite.getInvitelist
+    邀请相关接口
     """
-
+    
     @staticmethod
-    async def list(guild_id: Optional[str] = None, channel_id: Optional[str] = None, page: Optional[int] = None,
-                   page_size: Optional[int] = None) -> getInvitelist:
+    async def list(
+        guild_id: Optional[str] = None, 
+        channel_id: Optional[str] = None, 
+        page: Optional[int] = None,
+        page_size: Optional[int] = None
+    ) -> inviteListHandler:
+        """
+        获取邀请列表
+        :Params: guild_id: 服务器ID
+        :Params: channel_id 频道ID
+        // guild ID && Channel ID 二选一
+        :Params: page 页码
+        :Params: page_size 每页数据数量
+        :return: inviteListHandler
+        """
         data = {
             "guild_id": guild_id,
             "channel_id": channel_id,
@@ -24,46 +31,52 @@ class getInviteList:
             "page_size": page_size
         }
         result = await BotClient.get(url=baseAPIurl + "/invite/list", params=data)
-        return getInvitelist(**result.json())
+        return inviteListHandler(**result.json())
 
-
-class createInvite:
-    """
-    创建邀请列表
-    :Params: guild_id: 服务器ID
-    :Params: channel_id 频道ID
-    // guild ID && Channel ID 二选一
-    :Params: duration   邀请链接有效时长（秒)
-    :Params: setting_times 设置的次数
-    :return: Invite.createInvite
-    """
-
-    async def list(self: Optional[str] = None, channel_id: Optional[str] = None, duration: Optional[int] = None,
-                   setting_times: Optional[int] = None) -> createInvite:
+    @staticmethod
+    async def create(
+        guild_id: Optional[str] = None, 
+        channel_id: Optional[str] = None, 
+        duration: Optional[int] = None,          
+        setting_times: Optional[int] = None
+    ) -> inviteCreateHandler:
+        """
+        创建邀请列表
+        :Params: guild_id: 服务器ID
+        :Params: channel_id 频道ID
+        // guild ID && Channel ID 二选一
+        :Params: duration   邀请链接有效时长（秒)
+        :Params: setting_times 设置的次数
+        :return: inviteCreateHandler
+        """
         data = {
-            "guild_id": self,
+            "guild_id": guild_id,
             "channel_id": channel_id,
             "duration": duration,
             "setting_times": setting_times
         }
         result = await BotClient.post(url=baseAPIurl + "/invite/create", data=data)
-        return createInvite(**result.json())
+        return inviteCreateHandler(**result.json())
 
 
-class deleteInvite:
-    """
-    删除邀请列表
-    :Params: url_code 	邀请码
-    :Params: channel_id 服务器ID
-    :Parmas: guild_id 服务器频道ID
-    :return: Invite.deleteInvite
-    """
+    @staticmethod
+    async def delete(
+        url_code: str, 
+        channel_id: Optional[str] = None, 
+        guild_id: Optional[str] = None
+    ) -> inviteDeleteHandler:
+        """
+        删除邀请列表
 
-    async def list(self: str, channel_id: Optional[str] = None, guild_id: Optional[str] = None) -> deleteInvite:
+        :Params: url_code 	邀请码
+        :Params: channel_id 服务器ID
+        :Parmas: guild_id 服务器频道ID
+        :return: inviteDeleteHandler
+        """
         data = {
-            "url_code": self,
+            "url_code": url_code,
             "channel_id": channel_id,
             "guild_id": guild_id
         }
         result = await BotClient.post(url=baseAPIurl + "/invite/delete", data=data)
-        return deleteInvite(**result.json())
+        return inviteDeleteHandler(**result.json())

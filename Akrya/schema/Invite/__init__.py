@@ -1,17 +1,6 @@
 from ...schema import Base, statusBase
+from ...schema.objects import userBase
 from typing import List
-
-
-class User(Base):
-    id: str
-    username: str
-    identify_num: str
-    online: bool
-    status: int
-    bot: bool
-    avatar: str
-    vip_avatar: str
-
 
 class Data(Base):
     class Item(Base):
@@ -19,7 +8,7 @@ class Data(Base):
         guild_id: str
         url_code: str
         url: str
-        user: User
+        user: userBase
 
     items: List[Item]
 
@@ -32,16 +21,16 @@ class Data(Base):
     meta: Meta
 
 
-class getInvitelist(statusBase):
+class inviteListHandler(statusBase):
     data: Data
 
 
-class createInvite(statusBase):
-    class data(Base):
+class inviteCreateHandler(statusBase):
+    class Data(Base):
         url: str
 
-    data: data
+    data: Data
 
 
-class deleteInvite(statusBase):
+class inviteDeleteHandler(statusBase):
     data: dict

@@ -4,7 +4,7 @@ from typing import Optional
 
 class channelUser:
     """
-    频道消息相关接口列表
+    频道消息相关接口
     """
 
     @staticmethod
