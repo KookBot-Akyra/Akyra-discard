@@ -2,7 +2,10 @@ from .. import Base, statusBase, meta
 from ..objects import *
 from typing import Optional, Union, Dict, List
 
-class list(statusBase):
+class channelVauleError(Exception):
+    pass
+
+class channelListHandler(statusBase):
     class Data(Base):
         class Items(Base):
             id: str
@@ -17,7 +20,7 @@ class list(statusBase):
         meta: meta
     data: Data
     
-class view(statusBase):
+class channelViewHandler(statusBase):
     class Data(channelBase):
         limit_amount: int
         voice_quality: str
@@ -25,38 +28,38 @@ class view(statusBase):
         children: Optional[List[str]]
     data: Data
 
-class create(statusBase):
-    data: view.Data
+class channelCreateHandler(statusBase):
+    data: channelViewHandler.Data
 
-class update(statusBase):
+class channelUpdateHandler(statusBase):
     data: channelBase
 
-class delete(statusBase):
+class channelDeleteHandler(statusBase):
     data: Dict
 
-class userList(statusBase):
+class channelUserListHandler(statusBase):
     data: List[userBase]
 
-class moveUser(statusBase):
+class channelMoveUserHandler(statusBase):
     data: List
 
 class channel_role:
-    class index(statusBase):
+    class channelRoleIndexHandler(statusBase):
         permission_sync: int
         permission_overwrites: List[Union[permissionOverwrites, None]]
         permission_users: List[Union[permissionUsers, None]]
     
-    class create(statusBase):
+    class channelRoleCreateHandler(statusBase):
         data: Union[permissionOverwrites, permissionUser]
 
-    class update(statusBase):
+    class channelRoleUpdateHandler(statusBase):
         data: Union[permissionOverwrites, permissionUser]
 
-    class sync(statusBase):
+    class channelRoleSyncHandler(statusBase):
         class Data:
             permission_overwrites: List[Union[permissionOverwrites, None]]
             permission_users: List[Union[permissionUsers, None]]
         data: Data
     
-    class delete(statusBase):
+    class channelRoleDeleteHandler(statusBase):
         data: Dict

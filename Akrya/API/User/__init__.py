@@ -7,24 +7,27 @@ class user:
     用户相关接口
     """
     @staticmethod
-    async def me() -> meHandler:
+    async def me() -> userMeHandler:
         '''
         获取当前用户信息
 
-        :return: User.meHandler
+        :return: userMeHandler
         '''
         result = await BotClient.get(url=baseAPIurl + "/user/me")
-        return meHandler(**result.json())
+        return userMeHandler(**result.json())
 
     @staticmethod
-    async def view(user_id: str, guild_id: Optional[str] = None) -> viewHandler:
+    async def view(
+        user_id: str, 
+        guild_id: Optional[str] = None
+    ) -> userViewHandler:
         '''
         获取目标用户信息
 
         :param user_id: 用户id
         :param guild_id: (可选)服务器id
 
-        :return: User.viewHandler
+        :return: userViewHandler
         '''
         data = {
             "user_id": user_id
@@ -32,15 +35,15 @@ class user:
         if guild_id:
             data["guild_id"] = guild_id
         result = await BotClient.get(url=baseAPIurl + "/user/view", params=data)
-        return viewHandler(**result.json())
+        return userViewHandler(**result.json())
 
     @staticmethod
-    async def offline() -> offlineHandler:
+    async def offline() -> userOfflineHandler:
         '''
         下线机器人
 
-        :return: User.offlineHandler
+        :return: userOfflineHandler
         '''
         result = await BotClient.post(url=baseAPIurl + "/user/offline")
-        return offlineHandler(**result.json())
+        return userOfflineHandler(**result.json())
 

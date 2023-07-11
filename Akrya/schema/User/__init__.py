@@ -1,7 +1,7 @@
 from .. import Base
 from typing import Optional
 
-class meHandler(Base):
+class userMeHandler(Base):
     class me(Base):
         id: str
         username: str
@@ -21,7 +21,7 @@ class meHandler(Base):
     message: str
     data: me
 
-class viewHandler(Base):
+class userViewHandler(Base):
     class view(Base):
         class BG(Base):
             background: int
@@ -52,7 +52,7 @@ class viewHandler(Base):
     message: str
     data: view
 
-class offlineHandler(Base):
+class userOfflineHandler(Base):
     code: int
     message: str
     data: dict

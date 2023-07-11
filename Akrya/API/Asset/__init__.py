@@ -7,15 +7,17 @@ class asset:
     媒体模块接口
     """
     @staticmethod
-    async def create(file: Union[str, bytes]):
+    async def create(
+        file: Union[str, bytes]
+    ) -> assetsCreateHandler:
         """
         上传媒体文件
         
         :param file: str/bytes类型, 需要上传的文件(只能单个)
-        :return: create 
+        :return: assetsCreateHandler
         """
         body = {
             "file": file
         }
         result = await BotClient.post(baseAPIurl + '/asset/create', data=body)
-        return create(**result.json())
+        return assetsCreateHandler(**result.json())

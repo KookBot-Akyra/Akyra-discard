@@ -79,7 +79,10 @@ class Websocket_Connetion:
             self.sn = result.sn
             self.ws.ping_payload = json.dumps({"s":2, "sn": self.sn})
             channel_type = data.channel_type # 消息通道类型
-            type = data.type # 消息类型
+            # 你丫的kook不TM统一一下类型，一会TM 字符串一会整数型, 有病
+            type = int(data.type) # 消息类型
+            if type == 255:
+                return
             user_name = data.extra.author.username # 用户名
             identify_num = data.extra.author.identify_num # 用户名的认证数字
             guild_id = data.extra.guild_id # 服务器ID

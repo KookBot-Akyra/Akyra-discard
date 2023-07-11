@@ -1,6 +1,6 @@
 from .. import Base
 
-class create(Base):
+class assetsCreateHandler(Base):
     class Data:
         url: str
     code: int
