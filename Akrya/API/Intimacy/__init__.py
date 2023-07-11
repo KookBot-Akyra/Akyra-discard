@@ -1,7 +1,7 @@
 from typing import Optional
 
 from .. import BotClient, baseAPIurl
-from ...schema.Intimacy import intimacyHandler
+from ...schema.Intimacy import *
 
 
 class getIntimacyList:
@@ -12,12 +12,12 @@ class getIntimacyList:
     """
 
     @staticmethod
-    async def list(user_id: str) -> intimacyHandler:
+    async def list(user_id: str) -> intimacy:
         data = {
             "user_id": user_id
         }
         result = await BotClient.get(url=baseAPIurl + "/intimacy/index", params=data)
-        return intimacyHandler(**result.json())
+        return intimacy(**result.json())
 
 
 class updateIntimacyList:
