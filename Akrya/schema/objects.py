@@ -154,11 +154,12 @@ class channelMessageBase(Base):
     mention_info: mentionInfo
 
 class gameBase(Base):
+    "用户动态基础类"
     id: int
     name: str
     type: type
     options: str
     kmhook_admin: bool
-    process_name: List[str]
-    product_name: List[str]
+    process_name: List[Optional[str]]
+    product_name: List[Optional[str]]
     icon: str
