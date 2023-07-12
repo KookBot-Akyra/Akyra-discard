@@ -16,5 +16,6 @@ class intimacyIndexHandler(statusBase):
 
     data: index
 
+
 class intimacyUpdateHandler(statusBase):
     data: dict
