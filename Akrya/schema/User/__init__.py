@@ -1,6 +1,7 @@
 from .. import Base
 from typing import Optional
 
+
 class userMeHandler(Base):
     class me(Base):
         id: str
@@ -20,6 +21,7 @@ class userMeHandler(Base):
     code: int
     message: str
     data: me
+
 
 class userViewHandler(Base):
     class view(Base):
@@ -51,6 +53,7 @@ class userViewHandler(Base):
     code: int
     message: str
     data: view
+
 
 class userOfflineHandler(Base):
     code: int
