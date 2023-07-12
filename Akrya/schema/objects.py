@@ -93,6 +93,7 @@ class guildBase(Base):
     welcome_channel_id: str
     roles: str
     channels: List[Channels]
+    boost_num: Optional[int]
 
 class quoteBase(Base):
     "引用信息基础类"

@@ -17,10 +17,12 @@ class game:
 
         :param type: 游戏类型
 
-        :return: Game.gameHandlerBase
+        :return: gameHandlerBase
         """
 
-        data = {"type": type}
+        data = {
+            "type": type
+        }
         result = await BotClient.get(baseAPIurl + "/game", params=data)
         return gameHandlerBase(**result.json())
 
@@ -32,10 +34,12 @@ class game:
         :param icon: 游戏图标
         单日最大可创建 5 个游戏数据！！
 
-        :return: Game.gameHandlerBase
+        :return: gameHandlerBase
         """
 
-        data = {"name": name}
+        data = {
+            "name": name
+        }
         if icon:
             data["icon"] = icon
         result = await BotClient.post(baseAPIurl + "/game/create", data=data)
@@ -50,10 +54,12 @@ class game:
         :param id: 游戏ID
         :param name: 游戏名称
         :param icon: 游戏图标
-        :return Game.gameHandlerBase
+        :return gameHandlerBase
 
         """
-        data = {"id": id}
+        data = {
+            "id": id
+        }
         if name:
             data["name"] = name
         if icon:
@@ -68,7 +74,9 @@ class game:
         :param id: 游戏ID
         :return deleteHandler
         """
-        data = {"id": id}
+        data = {
+            "id": id
+        }
         result = await BotClient.post(baseAPIurl + "/game/delete", data=data)
         return gameHandlerBase(**result.json())
 
@@ -87,9 +95,12 @@ class game:
         :param software: 软件名称
         :param singer: 歌手
         :param music_name: 歌曲名称
-        :return: Game.gameHandlerBase
+        :return: gameHandlerBase
         """
-        data = {"id": id, "type": data_type}
+        data = {
+            "id": id, 
+            "type": data_type
+        }
         if software:
             data["software"] = software
         if singer:
@@ -107,6 +118,8 @@ class game:
         :return Game.gameHandlerBase
 
         """
-        data = {"type": data_type}
+        data = {
+            "type": data_type
+        }
         result = await BotClient.post(baseAPIurl + "/game/delete-activity", data=data)
         return gameHandlerBase(**result.json())
