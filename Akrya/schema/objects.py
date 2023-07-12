@@ -1,7 +1,8 @@
-from . import Base, statusBase
+from . import Base
 from typing import Optional, Union, List
 
 class userBase(Base):
+    "用户基础类"
     class liveInfo(Base):
         in_live: bool
         audience_count: int
@@ -10,20 +11,32 @@ class userBase(Base):
 
     id: str
     username: str
-    nickname: str
-    identify_num: str
+    nickname: Optional[str]
+    identify_num: Optional[str]
     online: bool
-    bot: bool
-    status: int
+    bot: Optional[bool]
+    status: Optional[int]
     avatar: str
-    vip_avatar: str
+    vip_avatar: Optional[str]
     mobile_verified: Optional[bool]
     roles: List[int]
     joined_at: Optional[int]
     active_time: Optional[int]
     live_info: Optional[liveInfo]
 
+class embedBase(Base):
+    "超链接解析基础类"
+    type: str
+    url: str
+    origin_url: str
+    av_no: str
+    iframe_path: str
+    duration: int
+    title: str
+    pic: str
+
 class permissionUsers(Base):
+    "用户权限组基础类"
     user: userBase
     allow: int
     deny: int
@@ -34,11 +47,13 @@ class permissionOverwrites(Base):
     deny: int
 
 class permissionUser(Base):
+    "用户权限基础类"
     user_id: str
     allow: int
     deny: int
 
 class channelBase(Base):
+    "频道基础类"
     id: str
     guild_id: str
     user_id: str
@@ -55,6 +70,7 @@ class channelBase(Base):
     permission_users: List[Union[permissionUsers, None]]
 
 class guildBase(Base):
+    "服务器基础类"
     class Channels(Base):
         id: str
         user_id: str
@@ -79,6 +95,7 @@ class guildBase(Base):
     channels: List[Channels]
 
 class quoteBase(Base):
+    "引用信息基础类"
     id: str
     type: int
     content: str
@@ -86,7 +103,62 @@ class quoteBase(Base):
     author: userBase
 
 class attachmentsBase(Base):
+    "附加的多媒体数据基础类"
     type: str
     url: str
     name: str
     size: int
+
+class channelMessageBase(Base):
+    "频道信息基础类"
+    class Reactions(Base):
+        class Emoji:
+            id: str
+            name: str
+        emoji: Emoji
+        count: int
+        me: bool
+
+    class mentionInfo:
+        class mentionPart:
+            id: str
+            username: str
+            full_name: str
+            avatar: str
+
+        class mentionRolePart:
+            role_id: int
+            name: str
+            color: int
+            position: int
+            hoist: int
+            mentionable: int
+            permissions: int
+
+        mention_part: List[mentionPart]
+        mention_role_part: List[mentionRolePart]
+
+
+    id: str
+    type: int
+    author: userBase
+    content: str
+    mention: List[str]
+    mention_all: bool
+    mention_roles: List[int]
+    mention_here: bool
+    embeds: List[embedBase]
+    attachments: Optional[attachmentsBase]
+    reactions: Reactions
+    quote: quoteBase
+    mention_info: mentionInfo
+
+class gameBase(Base):
+    id: int
+    name: str
+    type: type
+    options: str
+    kmhook_admin: bool
+    process_name: List[str]
+    product_name: List[str]
+    icon: str

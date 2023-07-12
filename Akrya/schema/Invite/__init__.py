@@ -1,4 +1,4 @@
-from ...schema import Base, statusBase
+from ...schema import Base, statusBase, meta
 from ...schema.objects import userBase
 from typing import List
 
@@ -11,15 +11,7 @@ class Data(Base):
         user: userBase
 
     items: List[Item]
-
-    class Meta(Base):
-        page: int
-        page_total: int
-        page_size: int
-        total: int
-
-    meta: Meta
-
+    meta: meta
 
 class inviteListHandler(statusBase):
     data: Data
