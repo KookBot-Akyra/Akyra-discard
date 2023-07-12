@@ -112,21 +112,21 @@ class attachmentsBase(Base):
 class channelMessageBase(Base):
     "频道信息基础类"
     class Reactions(Base):
-        class Emoji:
+        class Emoji(Base):
             id: str
             name: str
         emoji: Emoji
         count: int
         me: bool
 
-    class mentionInfo:
-        class mentionPart:
+    class mentionInfo(Base):
+        class mentionPart(Base):
             id: str
             username: str
             full_name: str
             avatar: str
 
-        class mentionRolePart:
+        class mentionRolePart(Base):
             role_id: int
             name: str
             color: int
