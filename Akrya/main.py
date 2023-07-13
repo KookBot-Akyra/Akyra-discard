@@ -1,20 +1,36 @@
-from .API.Gateway import gateway
 from .log import logger
 from .config import ws_compress
 from .websocket import Websocket_Connetion
+from .interface import AsyncRunnable
+
+from typing import List, Callable, Coroutine
+
+import asyncio
 
 __name__ = 'Akrya'
 
-async def getWssUrl() -> str:
-    """
-    用于获取连接Kook的Websocket地址
-    """
+TypeShutdownHandler = Callable[['Run'], Coroutine]
 
-    result = await gateway.index(ws_compress)
-    url = result.data.url
-    logger.info('获取到WsUrl, 尝试连接')
-    return url
+class Run(AsyncRunnable):
+    _shutdown_index: List[TypeShutdownHandler]
 
-async def run_ws_client():
-    client = Websocket_Connetion()
-    await client.run(await getWssUrl(), False)
+    def __init__(self) -> None:
+        self._shutdown_index = []
+
+    def on_shutdown(self, func: TypeShutdownHandler):
+        """decorator, register a function to handle bot stop"""
+
+        self._shutdown_index.append(func)
+
+        return func
+
+    def start(self):
+        try:
+            self.client = Websocket_Connetion()
+            if self.loop:
+                self.loop.run_until_complete(self.client.start())
+            else: 
+                self.loop = asyncio.new_event_loop()
+                self.loop.run_until_complete(self.client.start())
+        except KeyboardInterrupt:
+            logger.info('see you next time')

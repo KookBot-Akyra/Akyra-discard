@@ -1,5 +1,5 @@
-from Akrya.main import run_ws_client
-import asyncio
+from Akrya.main import Run
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(run_ws_client())
+Run().start()
+
+#asyncio.run(run_ws_client())

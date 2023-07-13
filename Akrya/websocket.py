@@ -1,71 +1,96 @@
-import websocket
 import time
 import zlib
 import json
-import random
-import rel
 import asyncio
-import threading
+
+from abc import ABC, abstractmethod
+from aiohttp import ClientWebSocketResponse, ClientSession, web, WSMessage
 
 from .log import logger
 from .config import ws_compress
 from .schema.wsHandler import EventHandler
+from .API.Gateway import gateway
+from .interface import AsyncRunnable
 
 __name__ = 'WebSocket'
 
-class Websocket_Connetion:
+class Receiver(AsyncRunnable, ABC):
+    """
+    1. receive raw data from khl server
+    2. decrypt & parse raw data into pkg
+    3. put pkg into the pkg_queue() for others to use
+    """
+    _queue: asyncio.Queue
+
+    @property
+    def type(self) -> str:
+        """the network type used by the receiver"""
+        raise NotImplementedError
+
+    @property
+    def pkg_queue(self) -> asyncio.Queue:
+        """output port of the receiver"""
+        return self._queue
+
+    @pkg_queue.setter
+    def pkg_queue(self, queue: asyncio.Queue):
+        self._queue = queue
+
+    @abstractmethod
+    async def start(self):
+        """run self"""
+        raise NotImplementedError
+
+async def GetWssUrl():
+    result = await gateway.index(0)
+    logger.info("尝试获取WsUrl")
+    return result.data.url
+
+class Websocket_Connetion(Receiver):
     """
     Websocket连接类
     """
     sn: int = 0
     s: int = -1
     session_id: str = ""
-    url: str = "wss://"
 
     def __init__(self):
-        pass
+        super().__init__()
 
-    async def run(self, wsurl: str, is_reconnect: bool):
+    async def heartbeat(self, ws_conn: ClientWebSocketResponse):
+        """khl customized heartbeat scheme"""
+        while True:
+            try:
+                await asyncio.sleep(26)
+                await ws_conn.send_json({'s': 2, 'sn': self.sn})
+            except ConnectionResetError:
+                return
+            except Exception as e:
+                logger.exception('error raised during websocket heartbeat', exc_info=e)
+
+    async def _connect_gateway_and_handle_msg(self, cs: ClientSession):
+        async with cs.ws_connect(self.wsurl) as ws_conn:
+            self.ping_task = asyncio.ensure_future(self.heartbeat(ws_conn), loop=self.loop)
+            logger.info('[ init ] 连接已启动')
+            try:
+                async for raw in ws_conn:
+                    raw: WSMessage
+                    await self.MessageHandler(raw.data, True if ws_compress == 1 else False)
+            except Exception:
+                logger.exception(
+                    'error raised during websocket receive, reconnect automatically'
+                )
+
+    async def start(self):
         """
         requires:
             wsurl: kook wss Url
         """
-        if is_reconnect:
-            wsurl = wsurl + '&resume=1&sn=5&session_id=' + self.session_id
-            self.sn = 0
-            self.s = -1
-            self.session_id = ""
+        wsurl = await GetWssUrl()
         self.wsurl = wsurl
-        self.ws = websocket.WebSocketApp(
-            wsurl,
-            on_open=self.on_open,
-            on_message=self.on_message,
-            on_error=self.on_error,
-            on_close=self.on_close,
-            on_ping=self.on_ping,
-            on_pong=self.on_pong
-        )
-        self.ws.run_forever(dispatcher=rel, ping_interval=30 + random.randint(-5, 5), ping_timeout=6)
-        self.ws.ping_payload = json.dumps({"s":2, "sn": self.sn})
-        rel.signal(2, rel.abort)
-        rel.dispatch()
-
-    def on_ping(wsapp, ws, message):
-        pass
-
-    def on_pong(wsapp, ws, message):
-        pass
-
-    def on_message(self, ws, message):
-        def handler(message):
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            if ws_compress == 1:
-                loop.run_until_complete(self.MessageHandler(message, True))
-            elif ws_compress == 0:
-                loop.run_until_complete(self.MessageHandler(message, False))
-
-        threading.Thread(target=handler, args=(message, )).start()
+        async with ClientSession(loop=self.loop) as cs:
+            while True:
+                await self._connect_gateway_and_handle_msg(cs)
 
     async def MessageHandler(self, message: str, compress: bool):
         # 信息处理
@@ -77,7 +102,6 @@ class Websocket_Connetion:
                 self.session_id = data.session_id
         elif self.s == 0:
             self.sn = result.sn
-            self.ws.ping_payload = json.dumps({"s":2, "sn": self.sn})
             channel_type = data.channel_type # 消息通道类型
             # 你丫的kook不TM统一一下类型，一会TM 字符串一会整数型, 有病
             type = int(data.type) # 消息类型
@@ -91,12 +115,3 @@ class Websocket_Connetion:
             msg_timestamp = time.strftime("%m-%d %H:%M:%S", time.localtime(data.msg_timestamp / 1000)) # 发送时间
             msg = f"{msg_timestamp} 服务器({guild_id})接收到消息: 通道类型: {channel_type}, 消息类型: {type}, 发送者: {user_name}#{identify_num}, 内容: \"{content}\" - {msg_id}"
             logger.info(msg)
-
-    def on_error(self, ws, error):
-        logger.error(error)
-
-    def on_close(self, ws, close_status_code, close_msg):
-        logger.info("连接已关闭")
-
-    def on_open(self, ws):
-        logger.info("连接已开启")

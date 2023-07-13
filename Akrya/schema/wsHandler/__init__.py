@@ -30,6 +30,6 @@ class EventHandler(Base):
         session_id: Optional[str]
         
     s: int
-    d: Main
+    d: Optional[Main]
     sn: Optional[int]
     
